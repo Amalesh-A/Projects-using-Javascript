@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+</head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<body onload="initClock()" font-family: "Impact" ;>
+
+
+    <div class="clock">
+      <div class="clock-face">
+        <div class="dot" style = "position: absolute; left: 155px; top: 156px;"></div>
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+      </div>
+      <div class="datetime">
+        <div class="date" style="position: absolute; top: 360px; left: 40px;">
+          <span id="dayname">Day</span>,
+          <span id="month">Month</span>
+          <span id="daynum">00</span>,
+          <span id="year">Year</span>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript">
+      function updateClock(){
+        var now = new Date();
+        var dname = now.getDay(),
+            mo = now.getMonth(),
+            dnum = now.getDate(),
+            yr = now.getFullYear(),
+            hou = now.getHours(),
+            min = now.getMinutes(),
+            sec = now.getSeconds(),
+            pe = "AM";
+  
+            if(hou >= 12){
+              pe = "PM";
+            }
+            if(hou == 0){
+              hou = 12;
+            }
+            if(hou > 12){
+              hou = hou - 12;
+            }
+  
+            Number.prototype.pad = function(digits){
+              for(var n = this.toString(); n.length < digits; n = 0 + n);
+              return n;
+            }
+  
+            var months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+            var week = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+            var ids = ["dayname", "month", "daynum", "year"];
+            var values = [week[dname], months[mo], dnum.pad(2), yr];
+            for(var i = 0; i < ids.length; i++)
+            document.getElementById(ids[i]).firstChild.nodeValue = values[i];
+      }
+  
+      function initClock(){
+        updateClock();
+        window.setInterval("updateClock()", 1);
+      }
+      </script>
+  <style>
+    html {
+      background: #e8ebec url('Clocks.jpg');
+      background-size: 1800px 1000px;
+      background-repeat: no-repeat;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .dot {
+      width: 1px;
+      border: 5px solid rgb(205, 155, 6);
+      border-radius: 100%;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      bottom: 208px;
+      border: 2px solid rgb(205, 155, 6);
+      border-radius: 100%;
+      margin: 10px auto;
+      position: relative;
+      padding: 1rem;
+      font-size: 30px;
+      color: rgb(205, 155, 6);
+      text-align: center;
+      animation: glow 1s ease-in-out infinite alternate;
+      box-shadow:
+        0 0 0 4px rgba(216, 153, 6, 0.2),
+        inset 0 0 0 3px rgb(205, 155, 6),
+        inset 0 0 10px rgb(205, 155, 6),
+        0 0 10px rgba(216, 153, 6, 0.2);
+    }
+
+    .hand {
+      width: 45%;
+      height: 2.5px;
+      left: 16px;
+      background: rgb(205, 155, 6);
+      position: absolute;
+      bottom: 158px;
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      transition: all 0.05s;
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+    }
+</style>
+
+<script>
+  const secondHand = document.querySelector('.second-hand');
+  const minsHand = document.querySelector('.min-hand');
+  const hourHand = document.querySelector('.hour-hand');
+
+  function setDate() {
+    const now = new Date();
+
+    const seconds = now.getSeconds();
+    const secondsDegrees = ((seconds / 60) * 360) + 90;
+    secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+
+    const mins = now.getMinutes();
+    const minsDegrees = ((mins / 60) * 360) + ((seconds/60)*6) + 90;
+    minsHand.style.transform = `rotate(${minsDegrees}deg)`;
+
+    const hour = now.getHours();
+    const hourDegrees = ((hour / 12) * 360) + ((mins/60)*30) + 90;
+    hourHand.style.transform = `rotate(${hourDegrees}deg)`;
+  }
+
+  setInterval(setDate, 1000);
+
+  setDate();
+
+</script>
+</body>
+</html>
